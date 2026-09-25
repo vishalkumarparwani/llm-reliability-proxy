@@ -1,0 +1,6 @@
+anthropic
+google-generativeai
+groq
+httpx
+pytest
+python-dotenv
