@@ -1,37 +1,112 @@
 # LLM Reliability & Cost Proxy
 
-A provider-agnostic middleware SDK that wraps LLM API calls with caching, retries, fallback, rate limiting, and per-call cost tracking — behind one consistent interface across multiple providers.
+A provider-agnostic Python middleware SDK for improving the reliability and cost visibility of Large Language Model (LLM) API calls through a unified interface.
 
-## Status: Work in Progress
+**Internship Capstone Project — FlyRank AI | Backend AI Developer Track**
 
-Currently implemented:
-- Base provider interface (`BaseProvider`, `LLMResponse`)
+## Overview
 
-Planned:
-- Provider adapters: Claude, Groq, Gemini, Ollama (local)
-- Caching layer
-- Retry with backoff
-- Automatic fallback between providers
-- Rate limiting
-- Per-call cost tracking
+LLM providers expose different APIs, response formats, rate limits, and pricing models. This project aims to provide a consistent interface for interacting with multiple providers while adding reliability and cost-management capabilities.
 
-## Why
+## Features
 
-Every LLM provider has a different SDK, different response shape, and different pricing model. This project gives one consistent interface (`LLMResponse`) so the rest of an application never needs to know which provider it's actually talking to — including a local model with zero cost and no external rate limit.
+### Implemented
+- **Provider abstraction:** A common `BaseProvider` interface.
+- **Unified response model:** An `LLMResponse` data structure.
 
-## Supported providers (planned)
+### Planned
+- **Provider adapters:** Anthropic Claude, Groq, Google Gemini, and Ollama.
+- **Response caching:** Avoid redundant API calls where appropriate.
+- **Retry mechanism:** Handle transient failures with configurable backoff.
+- **Automatic fallback:** Switch providers when the primary provider fails.
+- **Rate limiting:** Control request frequency.
+- **Cost tracking:** Estimate and record per-call token usage and cost.
 
-- Anthropic Claude
-- Groq
-- Google Gemini
-- Ollama (local, e.g. Qwen3 8B)
+## Supported Providers
 
-## Setup
+| Provider | Status |
+|---|---|
+| Anthropic Claude | Planned |
+| Groq | Planned |
+| Google Gemini | Planned |
+| Ollama (local models) | Planned |
+
+## Architecture
+
+The intended architecture separates provider-specific implementations from the reliability middleware.
+
+```text
+Application
+    |
+    v
+LLM Reliability Proxy
+    |
+    +-- Caching
+    +-- Retry & Fallback
+    +-- Rate Limiting
+    +-- Cost Tracking
+    |
+    v
+BaseProvider Interface
+    |
+    +-- Anthropic Adapter
+    +-- Groq Adapter
+    +-- Gemini Adapter
+    +-- Ollama Adapter
+    |
+    v
+LLM Providers
+```
+
+*Architecture represents the planned design; components are not necessarily implemented yet.*
+
+## Tech Stack
+
+- Python
+- Object-oriented design and abstract interfaces
+- Provider SDKs and HTTP APIs
+- Pytest (planned for testing)
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-python -m venv venv
-.\venv\Scripts\Activate.ps1   # Windows
+git clone <repository-url>
+cd LLM_reliability_proxy
+```
+
+### 2. Create and activate a virtual environment
+
+**Windows PowerShell**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-## Architecture
+### 4. Configure environment variables
+
+Add the required provider API keys to a local `.env` file as provider integrations are implemented. Never commit API keys or other secrets.
+
+## Project Goals
+
+- Provide a consistent interface across multiple LLM providers.
+- Improve resilience to transient errors and provider outages.
+- Reduce unnecessary API calls through caching.
+- Track token usage and estimated inference costs.
+- Support local models alongside hosted providers.
+
+## Project Status
+
+**Work in Progress.** The provider abstraction and unified response model are implemented. Additional integrations and reliability features are planned.
+
+## Acknowledgment
+
+Developed as the capstone project for the **FlyRank AI Backend AI Developer Internship**.
