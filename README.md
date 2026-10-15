@@ -2,7 +2,7 @@
 
 A provider-agnostic Python middleware SDK for improving the reliability and cost visibility of Large Language Model (LLM) API calls through a unified interface.
 
-**Internship Capstone Project — FlyRank AI | Backend AI Developer Track**
+**Internship Capstone Project - FlyRank AI | Backend AI Developer Track**
 
 ## Overview
 
