@@ -1,6 +1,0 @@
-Metadata-Version: 2.4
-Name: llm-reliability-proxy
-Version: 0.1.0
-Requires-Dist: groq
-Requires-Dist: python-dotenv
-Requires-Dist: httpx

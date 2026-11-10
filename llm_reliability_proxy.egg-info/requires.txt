@@ -1,3 +1,0 @@
-groq
-python-dotenv
-httpx
