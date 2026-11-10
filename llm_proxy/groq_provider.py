@@ -34,7 +34,7 @@ class GroqProvider(BaseProvider):
             messages=messages,
         )
         # This measures end-to-end client-observed latency
-        latency_ms = (time.perf_counter - start) * 1000
+        latency_ms = (time.perf_counter() - start) * 1000
 
         return LLMResponse(
             text=response.choices[0].message.content,
