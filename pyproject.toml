@@ -1,3 +1,4 @@
+
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
@@ -5,7 +6,30 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-reliability-proxy"
 version = "0.1.0"
-dependencies = ["groq", "python-dotenv", "httpx"]
+dependencies = [
+    "python-dotenv",
+    "httpx",
+    "pydantic"
+]
 
-[tool.setuptools]
-packages = ["llm_proxy"]
+[project.optional-dependencies]
+providers = [
+    "groq",
+    "anthropic",
+    "openai",
+    "google-genai",
+    "mistralai",
+    "cohere",
+    "together",
+    "fireworks-ai",
+    "cerebras-cloud-sdk",
+    "huggingface-hub",
+    "ollama",
+    "boto3",
+    "azure-ai-inference",
+    "google-cloud-aiplatform",
+    "replicate"
+]
+
+[tool.setuptools.packages.find]
+include = ["llm_proxy*"]
