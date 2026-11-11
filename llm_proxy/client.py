@@ -1,5 +1,5 @@
+from llm_proxy.fallback import call_with_fallback
 from llm_proxy.models import LLMResponse
-from llm_proxy.retry import retry
 
 PROVIDER_NAMES = ["anthropic", "openai", "gemini", "groq", "ollama"]
 
@@ -28,19 +28,32 @@ def get_provider(name: str):
 
 class LLMClient:
 
-    def __init__(self, provider_name: str):
-        self.provider = get_provider(provider_name)
+    def __init__(self, providers, max_attempt: int = 2, base_delay: float = 1.0):
+        if isinstance(providers, str):
+            providers = [providers]
+
+        self.providers = [get_provider(name) for name in providers]
+        self.max_attempt = max_attempt
+        self.base_delay = base_delay
 
     def call(self, prompt: str) -> LLMResponse:
-        return retry(lambda: self.provider.call(prompt))
+        return call_with_fallback(
+            self.providers,
+            prompt,
+            max_attempt=self.max_attempt,
+            base_delay=self.base_delay,
+        )
 
 
 if __name__ == "__main__":
     try:
         LLMClient("nope")
     except ValueError as error:
-        print("unknown provider error:", error)
+        print("unknown provider:", error)
 
-    client = LLMClient("groq")
-    result = client.call("what's 2+2")
-    print(result)
+    single = LLMClient("groq")
+    print("single:", single.call("what's 2+2").provider)
+
+    chain = LLMClient(["gemini", "groq"], base_delay=0.1)
+    result = chain.call("what's 2+2")
+    print("fallback answered by:", result.provider)
