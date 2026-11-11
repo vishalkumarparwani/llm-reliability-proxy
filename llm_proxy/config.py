@@ -8,4 +8,8 @@ PRICING = {
         "input_per_million": None,
         "output_per_million": None,
     },
+    "gemini-3.5-flash": {
+        "input_per_million": None,
+        "output_per_million": None,
+    }
 }
