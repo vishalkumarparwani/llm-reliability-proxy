@@ -4,8 +4,9 @@ import time
 from dotenv import load_dotenv
 from groq import Groq
 
-from .base import BaseProvider
-from .models import LLMResponse
+from llm_proxy.base import BaseProvider
+from llm_proxy.models import LLMResponse
+from llm_proxy.cost import calculate_cost
 
 load_dotenv()
 
@@ -33,17 +34,20 @@ class GroqProvider(BaseProvider):
             model=self.model,
             messages=messages,
         )
-        # This measures end-to-end client-observed latency
+
         latency_ms = (time.perf_counter() - start) * 1000
+
+        input_tokens=response.usage.prompt_tokens
+        output_tokens=response.usage.completion_tokens
 
         return LLMResponse(
             text=response.choices[0].message.content,
             provider="Groq",
             model=self.model,
-            input_tokens=response.usage.prompt_tokens,
-            output_tokens=response.usage.completion_tokens,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,    
             latency_ms=latency_ms,
-            cost=0.0,
+            cost=calculate_cost(self.model, input_tokens, output_tokens),
         )
 
 
