@@ -1,0 +1,85 @@
+llm-reliability-proxy/
+├── llm_proxy/
+│   ├── __init__.py          → exports the public API
+│   ├── models.py            → LLMResponse, already done
+│   ├── base.py              → BaseProvider interface only
+│   ├── groq_provider.py     → already done, needs small update
+│   ├── claude_provider.py   → Claude adapter
+│   ├── gemini_provider.py   → Gemini adapter
+│   ├── ollama_provider.py   → local model adapter, cost always 0
+│   ├── config.py            → pricing constants and settings
+│   ├── cost.py              → tokens to money
+│   ├── retry.py             → retry with backoff
+│   ├── fallback.py          → switch provider on failure
+│   ├── cache.py             → reuse earlier responses
+│   ├── rate_limiter.py      → limits per key
+│   └── client.py            → the one entry point users call
+├── app/
+│   ├── main.py              → FastAPI demo endpoint
+│   ├── db.py                → stores every call's cost log
+│   └── jobs.py              → daily cost rollup job
+├── examples/basic_usage.py
+├── pyproject.toml
+├── requirements.txt
+├── .env.example
+├── .gitignore
+├── README.md
+├── EVIDENCE.md
+└── BUILDLOG.md
+
+
+Recommended shortlist
+1. Groq
+2. Anthropic
+3. OpenAI
+4. Google Gemini
+5. Mistral AI
+6. DeepSeek
+7. Together AI
+8. Fireworks AI
+9. Cerebras
+10. Cohere
+11. OpenRouter
+12. AWS Bedrock
+13. Hugging Face
+14. Ollama
+15. NVIDIA
+
+
+
+chatgpt:
+llm-reliability-proxy/
+│
+├── llm_proxy/
+│   │
+│   ├── __init__.py
+│   ├── config.py
+│   ├── cost.py
+│   ├── models.py
+│   ├── registry.py
+│   ├── router.py
+│   │
+│   ├── providers/
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   │
+│   │   ├── groq_provider.py
+│   │   ├── claude_provider.py
+│   │   ├── openai_provider.py
+│   │   ├── gemini_provider.py
+│   │   ├── mistral_provider.py
+│   │   ├── deepseek_provider.py
+│   │   ├── cohere_provider.py
+│   │   ├── together_provider.py
+│   │   ├── fireworks_provider.py
+│   │   ├── cerebras_provider.py
+│   │   └── ollama_provider.py
+│   │
+│   └── ...
+│
+├── tests/
+├── .env
+├── .env.example
+├── .gitignore
+├── pyproject.toml
+└── README.md

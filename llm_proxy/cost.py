@@ -15,4 +15,7 @@ def calculate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
 
 if __name__ == "__main__":
     print(calculate_cost("openai/gpt-oss-120b", 86, 33))
-    print(calculate_cost("fake-model", 86, 33))
+    try:
+        calculate_cost("fake-model", 86, 33)
+    except ValueError as error:
+        print("unknown model:", error)

@@ -1,112 +1,53 @@
-# LLM Reliability & Cost Proxy
+# LLM Reliability Proxy
 
-A provider-agnostic Python middleware SDK for improving the reliability and cost visibility of Large Language Model (LLM) API calls through a unified interface.
+A Python SDK that wraps LLM API calls behind one interface, with retry, provider fallback, and per call cost tracking.
 
-**Internship Capstone Project - FlyRank AI | Backend AI Developer Track**
+## Status: work in progress
 
-## Overview
+Working now:
 
-LLM providers expose different APIs, response formats, rate limits, and pricing models. This project aims to provide a consistent interface for interacting with multiple providers while adding reliability and cost-management capabilities.
+- One provider interface and one response shape across Groq, Anthropic, Gemini, OpenAI and Ollama
+- Per call cost from pinned pricing constants, with reasoning tokens counted as output
+- Retry with exponential backoff
+- Fallback across a list of providers, with a combined failure report
 
-## Features
+Not built yet:
 
-### Implemented
-- **Provider abstraction:** A common `BaseProvider` interface.
-- **Unified response model:** An `LLMResponse` data structure.
+- Caching, rate limiting, usage log, demo API
 
-### Planned
-- **Provider adapters:** Anthropic Claude, Groq, Google Gemini, and Ollama.
-- **Response caching:** Avoid redundant API calls where appropriate.
-- **Retry mechanism:** Handle transient failures with configurable backoff.
-- **Automatic fallback:** Switch providers when the primary provider fails.
-- **Rate limiting:** Control request frequency.
-- **Cost tracking:** Estimate and record per-call token usage and cost.
+## Verification
 
-## Supported Providers
+- Groq: verified with live calls
+- Ollama: verified locally
+- Anthropic, Gemini, OpenAI: implemented against the official SDKs but not verified live, because their APIs need paid credits or billing that this project avoids
 
-| Provider | Status |
-|---|---|
-| Anthropic Claude | Planned |
-| Groq | Planned |
-| Google Gemini | Planned |
-| Ollama (local models) | Planned |
+## Install
 
-## Architecture
-
-The intended architecture separates provider-specific implementations from the reliability middleware.
-
-```text
-Application
-    |
-    v
-LLM Reliability Proxy
-    |
-    +-- Caching
-    +-- Retry & Fallback
-    +-- Rate Limiting
-    +-- Cost Tracking
-    |
-    v
-BaseProvider Interface
-    |
-    +-- Anthropic Adapter
-    +-- Groq Adapter
-    +-- Gemini Adapter
-    +-- Ollama Adapter
-    |
-    v
-LLM Providers
+```
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install -e ".[groq]"
 ```
 
-*Architecture represents the planned design; components are not necessarily implemented yet.*
+Copy `.env.example` to `.env` and fill in the keys you use.
 
-## Tech Stack
+## Usage
 
-- Python
-- Object-oriented design and abstract interfaces
-- Provider SDKs and HTTP APIs
-- Pytest (planned for testing)
+```python
+from llm_proxy import LLMClient
 
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone <repository-url>
-cd LLM_reliability_proxy
+client = LLMClient(["gemini", "groq"])
+response = client.call("what's 2+2")
+print(response.text, response.provider, response.cost)
 ```
 
-### 2. Create and activate a virtual environment
+## Known limitations
 
-**Windows PowerShell**
+- Retry and fallback trigger on any error, not only temporary ones
+- Cost uses floats, which is fine for single calls but should be rounded or stored as integers when summing many
+- Pricing is pinned by hand and must be updated when providers change prices
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
+## Future ideas
 
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure environment variables
-
-Add the required provider API keys to a local `.env` file as provider integrations are implemented. Never commit API keys or other secrets.
-
-## Project Goals
-
-- Provide a consistent interface across multiple LLM providers.
-- Improve resilience to transient errors and provider outages.
-- Reduce unnecessary API calls through caching.
-- Track token usage and estimated inference costs.
-- Support local models alongside hosted providers.
-
-## Project Status
-
-**Work in Progress.** The provider abstraction and unified response model are implemented. Additional integrations and reliability features are planned.
-
-## Acknowledgment
-
-Developed as the capstone project for the **FlyRank AI Backend AI Developer Internship**.
+- Semantic caching
+- Pricing drift checker\
