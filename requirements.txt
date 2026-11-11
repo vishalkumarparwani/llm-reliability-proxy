@@ -4,3 +4,4 @@ groq
 httpx
 pytest
 python-dotenv
+openai 1.99.0
